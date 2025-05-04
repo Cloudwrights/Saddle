@@ -1,0 +1,30 @@
+language: php:8.2
+framework: wordpress
+
+hooks:
+  deployed: scripts/deploy-callback.sh
+
+events:
+  wp_cron:
+    schedule: '*/15 * * * *'
+    command: php wp-cli.phar cron event run --due-now
+  copia_custom:
+    schedule: '*/2 * * * *'
+    command: php wp-cli.phar copia-custom-event --with --flags
+
+artefact:
+  exclude:
+    - .git
+    - .github
+    - web/app/cache
+    - web/app/uploads/*/
+    - logs/*/
+  writable:
+    - web/data
+    - web/app/cache
+    - web/app/themes/foo/storage/logs
+    - web/app/themes/foo/storage/framework/cache
+    - web/app/themes/foo/storage/framework/views
+    - web/app/uploads
+    - web/app/wflogs
+    - logs

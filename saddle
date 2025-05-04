@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+
+import sys
+from ruamel.yaml import YAML
+
+try:
+    key_path = sys.argv[1]
+    if not key_path:
+        raise
+except:
+    print("Failed to read input from commandline argument.", file=sys.stderr, flush=True)
+    sys.exit(1)
+
+yaml = YAML(typ="safe")
+
+default_saddle_data = {}
+
+def return_default(keys: list) -> str:
+    """
+    Return the requested key from the default template.
+    """
+
+    return "bork"
+
+try:
+    with open("saddle.yaml", "r") as f:
+        data = yaml.load(f)
+except FileNotFoundError as e:
+    print("Failed to read saddle.yaml", file=sys.stderr, flush=True)
+    data = dict.copy(default_saddle_data)
+
+keys = key_path.split(".")
+
+try:
+    for key in keys:
+        data = data[key]
+except KeyError as e:
+    print("", file=sys.stdout, flush=True)
+    print("Invalid key path provided.", file=sys.stderr, flush=True)
+    sys.exit(1)
+
+print(data, file=sys.stdout, flush=True)
